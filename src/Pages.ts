@@ -1,0 +1,5 @@
+export enum Pages {
+  TOOL_SELECT,
+  SORT_FOLDER_SELECT,
+  EDIT_FOLDER_SELECT
+}
