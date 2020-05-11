@@ -1,12 +1,6 @@
-import React, {
-  FC,
-  useContext,
-  useRef,
-  useState
-} from "react";
+import React, { FC, useContext, useRef, useState } from "react";
 import { AppContext } from "./AppContextProvider";
 const fs = require("fs");
-const exec = require("child_process").exec;
 
 export const ImageSelector: FC = () => {
   const { fromDir, toDir } = useContext(AppContext);
@@ -15,9 +9,12 @@ export const ImageSelector: FC = () => {
   const containerDiv = useRef(null);
 
   const copy = () => {
-    exec(
-      `copy /y "${fromDir}\\${dirContent.current[counter]}" "${toDir}"`,
-      (error, stdout, stderr) => {}
+    fs.copyFile(
+      `${fromDir}\\${dirContent.current[counter]}`,
+      `${toDir}\\${dirContent.current[counter]}`,
+      err => {
+        if (err) throw err;
+      }
     );
   };
 
