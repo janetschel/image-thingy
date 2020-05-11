@@ -1,7 +1,9 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import { Button, Headline, IconButton } from "../util/smallComponents";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import { AppContext } from "./AppContextProvider";
+import { Pages } from "../Pages";
 
 const LIGHT_GREY = "#dfdfdf";
 
@@ -21,8 +23,9 @@ const ErrorMessage = styled.span`
 `;
 
 export const SortSelector: FC = () => {
-  const [fromPath, setFromPath] = useState("");
-  const [toPath, setToPath] = useState("");
+  const { fromDir, setFromDir, toDir, setToDir, setPage } = useContext(
+    AppContext
+  );
   const [errorMessage, setErrorMessage] = useState("");
   const continueButton = useRef(null);
 
@@ -36,9 +39,9 @@ export const SortSelector: FC = () => {
         if (!result.canceled) {
           const path = result.filePaths[0];
           if (fromOrTo === "from") {
-            setFromPath(path);
+            setFromDir(path);
           } else {
-            setToPath(path);
+            setToDir(path);
           }
         }
       });
@@ -47,16 +50,20 @@ export const SortSelector: FC = () => {
   const handleContinueClick = () => {
     let newErrorMessage = "";
     setErrorMessage("");
-    if (fromPath === "") {
+    if (fromDir === "") {
       newErrorMessage = "Aus welchem Ordner möchtest du kopieren?";
-    } else if (toPath === "") {
+    } else if (toDir === "") {
       newErrorMessage = "In welchen Ordner möchtest du kopieren?";
-    } else if (fromPath === toPath) {
+    } else if (fromDir === toDir) {
       newErrorMessage = "Die Ordner müssen sich unterscheiden.";
     }
 
-    setErrorMessage(newErrorMessage);
-    newErrorMessage && shakeContinue();
+    if (newErrorMessage) {
+      setErrorMessage(newErrorMessage);
+      shakeContinue();
+    } else {
+      setPage(Pages.SORT);
+    }
   };
 
   const shakeContinue = () => {
@@ -71,17 +78,17 @@ export const SortSelector: FC = () => {
       <InnerDiv>
         <span>von</span>
         <Button
-          style={{ color: fromPath ? "inherit" : LIGHT_GREY }}
+          style={{ color: fromDir ? "inherit" : LIGHT_GREY }}
           onClick={() => handleDirectoryChange("from")}
         >
-          {fromPath || "Ordner auswählen..."}
+          {fromDir || "Ordner auswählen..."}
         </Button>
         <span>nach</span>
         <Button
-          style={{ color: toPath ? "inherit" : LIGHT_GREY }}
+          style={{ color: toDir ? "inherit" : LIGHT_GREY }}
           onClick={() => handleDirectoryChange("to")}
         >
-          {toPath || "Ordner auswählen..."}
+          {toDir || "Ordner auswählen..."}
         </Button>
       </InnerDiv>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

@@ -6,11 +6,9 @@ import { MainComponent } from "./MainComponent";
 class App extends Component {
   render() {
     return (
-      <div>
-        <AppContextProvider>
-          <MainComponent />
-        </AppContextProvider>
-      </div>
+      <AppContextProvider>
+        <MainComponent />
+      </AppContextProvider>
     );
   }
 }

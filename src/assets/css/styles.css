@@ -7,18 +7,20 @@
 
 html {
   margin: 0;
-  top: 0;
-  bottom: 0;
   min-height: 600px;
   min-width: 800px;
+  height: 100%;
+  width: 100%;
   font-family: "Roboto", sans-serif;
   letter-spacing: 1.1px;
   font-size: 1.4em;
   color: #505050;
 }
 
-body {
+body, #root {
   margin: 0;
+  height: 100%;
+  width: 100%;
 }
 
 @keyframes shake {
