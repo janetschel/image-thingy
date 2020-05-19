@@ -37,7 +37,7 @@ export const SortSelector: FC = () => {
       })
       .then(result => {
         if (!result.canceled) {
-          const path = result.filePaths[0];
+          const path = result.filePaths[0].replace(/\\/g, "/");
           if (fromOrTo === "from") {
             setFromDir(path);
           } else {
