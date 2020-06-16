@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "./AppContextProvider";
 import styled from "styled-components";
 import { Beenhere } from "@material-ui/icons";
-import { BLUE } from "../util/constants";
+import { BLUE, HEADER_HEIGHT } from "../util/constants";
 import { loadImageNames, rotateImage } from "../util/functions";
 import { Directions } from "../util/enums";
 import { SelectorMouseControl } from "./SelectorMouseControl";
@@ -16,7 +16,6 @@ const CheckIcon = styled(Beenhere)`
   right: 0;
   font-size: 100px !important;
   color: ${BLUE};
-  z-index: 2;
 `;
 
 export const ImageSelector: FC = () => {
@@ -107,8 +106,9 @@ export const ImageSelector: FC = () => {
       ref={containerDiv}
       style={{
         width: "100%",
-        height: "100%",
-        textAlign: "center"
+        height: `calc(100% - ${HEADER_HEIGHT}px)`,
+        textAlign: "center",
+        position: "relative"
       }}
       onKeyPress={handleKeyPress}
       tabIndex={0}
@@ -124,11 +124,13 @@ export const ImageSelector: FC = () => {
         }}
       />
       <SelectorMouseControl
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-        handleRotateLeft={handleRotateLeft}
-        handleRotateRight={handleRotateRight}
-        handleCopyOrDelete={handleCopyOrDelete}
+        {...{
+          handlePrevious,
+          handleNext,
+          handleRotateLeft,
+          handleRotateRight,
+          handleCopyOrDelete
+        }}
       />
     </div>
   );

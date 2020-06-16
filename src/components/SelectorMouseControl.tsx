@@ -8,7 +8,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { BLUE } from "../util/constants";
 
 const StyledDiv = styled.div`
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
@@ -16,11 +16,11 @@ const StyledDiv = styled.div`
   grid-template-columns: repeat(9, minmax(auto, 1fr));
   grid-auto-rows: 1fr;
   grid-template-areas:
-    "h h h h h h h h h"
-    ". . . . . . . . ."
     "left . . . . . . . right"
-    ". . . . . . . . ."
-    ". . . rotateLeft copy rotateRight . . .";
+    "left . . . . . . . right"
+    "left . . . . . . . right"
+    "left . . . . . . . right"
+    "left . . rotateLeft copy rotateRight . . right";
   opacity: 0;
   transition: opacity 0.4s;
 `;

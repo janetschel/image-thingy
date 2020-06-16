@@ -30,3 +30,7 @@ body, #root {
   83.3% {transform: translateX(-20px)}
   100% {transform: translateX(0px)}
 }
+
+button:focus, div:focus {
+  outline: none;
+}
