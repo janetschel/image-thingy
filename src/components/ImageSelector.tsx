@@ -1,17 +1,11 @@
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import React, { FC, useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "./AppContextProvider";
 import styled from "styled-components";
 import { Beenhere } from "@material-ui/icons";
 import { BLUE } from "../util/constants";
 import { loadImageNames, rotateImage } from "../util/functions";
 import { Directions } from "../util/enums";
+import { SelectorMouseControl } from "./SelectorMouseControl";
 
 const fs = require("fs");
 const { getColorFromURL } = require("color-thief-node");
@@ -34,77 +28,79 @@ export const ImageSelector: FC = () => {
   );
   const fromDirContent = useRef<Array<string>>(loadImageNames(fromDir));
   const containerDiv = useRef<HTMLDivElement>(null);
+  const fromPath = useRef("");
+  const toPath = useRef("");
   const [imageToDisplay, setImageToDisplay] = useState<{
     src: string;
     timestamp: number;
   }>({ src: "", timestamp: Date.now() });
 
   useEffect(() => {
-    const path = `${fromDir}/${fromDirContent.current[counter]}`;
+    fromPath.current = `${fromDir}/${fromDirContent.current[counter]}`;
+    toPath.current = `${toDir}/${fromDirContent.current[counter]}`;
 
     setExists(toDirContent.includes(fromDirContent.current[counter]));
-
-    getColorFromURL(path).then(color => {
+    getColorFromURL(fromPath.current).then(color => {
       containerDiv.current.style.backgroundColor = `rgb(${color[0]},${color[1]},${color[2]}`;
     });
+    setImageToDisplay({ src: fromPath.current, timestamp: Date.now() });
+  }, [
+    containerDiv,
+    setExists,
+    fromDir,
+    toDir,
+    fromPath,
+    toPath,
+    fromDirContent,
+    toDirContent,
+    counter
+  ]);
 
-    setImageToDisplay({ src: path, timestamp: Date.now() });
-  }, [toDirContent, counter]);
+  const handleRotate = (path: string, direction: Directions) => {
+    rotateImage(path, direction).then(() =>
+      setImageToDisplay({ src: path, timestamp: Date.now() })
+    );
+  };
 
-  const copyOrDelete = useCallback(
-    async (fromPath: string, toPath: string) => {
-      if (exists) {
-        fs.unlinkSync(toPath);
-      } else {
-        fs.copyFileSync(fromPath, toPath);
-      }
-      setToDirContent(loadImageNames(toDir));
-    },
-    [exists]
-  );
+  const copyOrDelete = async (fromPath: string, toPath: string) => {
+    if (exists) {
+      fs.unlinkSync(toPath);
+    } else {
+      fs.copyFileSync(fromPath, toPath);
+    }
+    setToDirContent(loadImageNames(toDir));
+  };
 
-  const decreaseCounter = useCallback(() => {
-    setCounter(prev => (prev > 0 ? prev - 1 : prev));
-  }, [setCounter]);
-
-  const increaseCounter = useCallback(() => {
+  const handlePrevious = () => setCounter(prev => (prev > 0 ? prev - 1 : prev));
+  const handleNext = () =>
     setCounter(prev =>
       prev < fromDirContent.current.length - 1 ? prev + 1 : prev
     );
-  }, [setCounter]);
+  const handleRotateLeft = () =>
+    handleRotate(fromPath.current, Directions.LEFT);
+  const handleRotateRight = () =>
+    handleRotate(fromPath.current, Directions.RIGHT);
+  const handleCopyOrDelete = () =>
+    copyOrDelete(fromPath.current, toPath.current);
 
-  const handleRotate = useCallback(
-    (path: string, direction: Directions) => {
-      rotateImage(path, direction).then(() =>
-        setImageToDisplay({ src: path, timestamp: Date.now() })
-      );
-    },
-    [setImageToDisplay]
-  );
-
-  const handleKeyPress = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      const fromPath = `${fromDir}/${fromDirContent.current[counter]}`;
-      const toPath = `${toDir}/${fromDirContent.current[counter]}`;
-      switch (event.key) {
-        case "a":
-          decreaseCounter();
-          break;
-        case "d":
-          increaseCounter();
-          break;
-        case "q":
-          handleRotate(fromPath, Directions.LEFT);
-          break;
-        case "e":
-          handleRotate(fromPath, Directions.RIGHT);
-          break;
-        case " ":
-          copyOrDelete(fromPath, toPath);
-      }
-    },
-    [increaseCounter, handleRotate, copyOrDelete, counter]
-  );
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (event.key) {
+      case "a":
+        handlePrevious();
+        break;
+      case "d":
+        handleNext();
+        break;
+      case "q":
+        handleRotateLeft();
+        break;
+      case "e":
+        handleRotateRight();
+        break;
+      case " ":
+        handleCopyOrDelete();
+    }
+  };
 
   return (
     <div
@@ -126,6 +122,13 @@ export const ImageSelector: FC = () => {
           height: "100%",
           objectFit: "contain"
         }}
+      />
+      <SelectorMouseControl
+        handlePrevious={handlePrevious}
+        handleNext={handleNext}
+        handleRotateLeft={handleRotateLeft}
+        handleRotateRight={handleRotateRight}
+        handleCopyOrDelete={handleCopyOrDelete}
       />
     </div>
   );
