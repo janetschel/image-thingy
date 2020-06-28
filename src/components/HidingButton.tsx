@@ -9,11 +9,11 @@ interface HidingButtonProps
 export const HidingButton: FC<HidingButtonProps> = (props) => {
   const hidingButton = useRef<HTMLButtonElement>(null);
   const showControls = () => {
-    //(hidingButton.current.parentNode as HTMLDivElement).style.opacity = "1";
+    (hidingButton.current.parentNode as HTMLDivElement).style.opacity = "1";
   };
 
   const hideControls = () => {
-    //(hidingButton.current.parentNode as HTMLDivElement).style.opacity = "0";
+    (hidingButton.current.parentNode as HTMLDivElement).style.opacity = "0";
   };
 
   return (

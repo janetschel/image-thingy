@@ -2,58 +2,78 @@ import React, { createContext, FC, useEffect, useState } from "react";
 import { Filtrr2 } from "../../filtrr2/filtrr2";
 
 interface Context {
-  brighten: number;
-  setBrighten: (brighten: number) => void;
-  saturate: number;
-  setSaturate: (saturate: number) => void;
-  expose: number;
-  setExpose: (expose: number) => void;
-  sharpen: number;
-  setSharpen: (sharpen: number) => void;
-  contrast: number;
-  setContrast: (contrast: number) => void;
-  gamma: number;
-  setGamma: (gamma: number) => void;
+  brightenValue: number;
+  setBrightenValue: (brighten: number) => void;
+  saturateValue: number;
+  setSaturateValue: (saturateValue: number) => void;
+  exposeValue: number;
+  setExposeValue: (exposeValue: number) => void;
+  sharpenValue: number;
+  setSharpenValue: (sharpenValue: number) => void;
+  contrastValue: number;
+  setContrastValue: (contrastValue: number) => void;
+  gammaValue: number;
+  setGammaValue: (gammaValue: number) => void;
+  temperatureValue: number;
+  setTemperatureValue: (temperatureValue: number) => void;
+  reset: () => void;
 }
 
 export const EditorContext = createContext<Context>({
-  brighten: 0,
-  setBrighten: () => {},
-  saturate: 0,
-  setSaturate: () => {},
-  expose: 0,
-  setExpose: () => {},
-  sharpen: 0,
-  setSharpen: () => {},
-  contrast: 0,
-  setContrast: () => {},
-  gamma: 0,
-  setGamma: () => {},
+  brightenValue: 0,
+  setBrightenValue: () => {},
+  saturateValue: 0,
+  setSaturateValue: () => {},
+  exposeValue: 0,
+  setExposeValue: () => {},
+  sharpenValue: 0,
+  setSharpenValue: () => {},
+  contrastValue: 0,
+  setContrastValue: () => {},
+  gammaValue: 0,
+  setGammaValue: () => {},
+  temperatureValue: 0,
+  setTemperatureValue: () => {},
+  reset: () => {}
 });
 
 export const EditorContextProvider: FC = ({ children }) => {
-  const [brighten, setBrighten] = useState<number>(0);
-  const [saturate, setSaturate] = useState<number>(0);
-  const [expose, setExpose] = useState<number>(0);
-  const [sharpen, setSharpen] = useState<number>(0);
-  const [contrast, setContrast] = useState<number>(0);
-  const [gamma, setGamma] = useState<number>(0);
+  const [brightenValue, setBrightenValue] = useState<number>(0);
+  const [saturateValue, setSaturateValue] = useState<number>(0);
+  const [exposeValue, setExposeValue] = useState<number>(0);
+  const [sharpenValue, setSharpenValue] = useState<number>(0);
+  const [contrastValue, setContrastValue] = useState<number>(0);
+  const [gammaValue, setGammaValue] = useState<number>(0);
+  const [temperatureValue, setTemperatureValue] = useState<number>(0);
+
+  const reset = () => {
+    setBrightenValue(0);
+    setSaturateValue(0);
+    setExposeValue(0);
+    setSharpenValue(0);
+    setContrastValue(0);
+    setGammaValue(0);
+    setTemperatureValue(0);
+  };
 
   return (
     <EditorContext.Provider
       value={{
-        brighten,
-        setBrighten,
-        saturate,
-        setSaturate,
-        expose,
-        setExpose,
-        sharpen,
-        setSharpen,
-        contrast,
-        setContrast,
-        gamma,
-        setGamma,
+        brightenValue,
+        setBrightenValue,
+        saturateValue,
+        setSaturateValue,
+        exposeValue,
+        setExposeValue,
+        sharpenValue,
+        setSharpenValue,
+        contrastValue,
+        setContrastValue,
+        gammaValue,
+        setGammaValue,
+        temperatureValue,
+        setTemperatureValue,
+        reset
       }}
     >
       {children}

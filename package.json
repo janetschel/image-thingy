@@ -1,22 +1,8 @@
 {
-  "name": "electron-react-webpack-boilerplate",
-  "version": "1.11.0",
-  "description": "Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started with building your next app.",
-  "license": "MIT",
+  "name": "image-thingy",
+  "version": "1.0.0",
+  "description": "Application to easily and quickly sort through images with the option to edit those images.",
   "private": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate.git"
-  },
-  "homepage": "",
-  "bugs": {
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate.git/issues"
-  },
-  "author": {
-    "name": "Alex Devero",
-    "email": "deveroalex@gmail.com",
-    "url": "https://github.com/alexdevero"
-  },
   "keywords": [
     "app",
     "boilerplate",
@@ -48,20 +34,19 @@
   "dependencies": {
     "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "latest",
-    "caman": "^4.1.2",
     "color-thief-node": "^1.0.3",
-    "jimp": "^0.12.0",
     "jquery": "^3.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
     "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
-    "@types/jimp": "^0.2.28",
     "@types/react": "^16.9.34",
     "@types/styled-components": "^5.1.0",
+    "@types/jquery": "^3.5.0",
     "babel-loader": "^8.1.0",
     "babili-webpack-plugin": "^0.1.2",
     "cross-env": "^7.0.2",

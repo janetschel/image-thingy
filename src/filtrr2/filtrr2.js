@@ -33,156 +33,148 @@
 // provide callbacks to be called when the image is ready and
 // update the image with new effects manually, instead of one-off
 // in the constructor callback.
-var F = function(el, callback, timestamp)
-{
-    var name   = el[0].nodeName.toLowerCase(),
-        offset = el.position(),
-        events = null,
-        _ready = false,
-        _callback = callback || null;
+var F = function(el, callback, timestamp) {
+  var name = el[0].nodeName.toLowerCase(),
+    offset = el.position(),
+    events = null,
+    _ready = false,
+    _callback = callback || null;
 
-    // Replaces an image with a canvas element.
-    var repl = function(pic)
-    {
-        var img = new Image();
+  // Replaces an image with a canvas element.
+  var repl = function(pic) {
+    var img = new Image();
 
-        img.src = el.attr("src");
-        img.onload = $.proxy(function()
-        {
-            var c = $("<canvas>", {
-                        'id'   : "filtrr2-" + el.attr('id'),
-                        'class': el.attr('class'),
-                        'style': el.attr('style')
-                    })
-                    .css({
-                        width: el.width(),
-                        height: el.height(),
-                        top : offset.top,
-                        left: offset.left
-                    }),
-                canv = c[0], ctx;
+    img.src = el.attr("src");
+    img.onload = $.proxy(function() {
+      var c = $("<canvas>", {
+          id: "filtrr2-" + el.attr("id"),
+          class: el.attr("class"),
+          style: el.attr("style")
+        }).css({
+          width: el.width(),
+          height: el.height(),
+          top: offset.top,
+          left: offset.left
+        }),
+        canv = c[0],
+        ctx;
 
-            this.canvas  = c;
+      this.canvas = c;
 
-            canv.width  = img.width;
-            canv.height = img.height;
+      canv.width = img.width;
+      canv.height = img.height;
 
-            canv.getContext("2d").drawImage(img, 0, 0);
+      canv.getContext("2d").drawImage(img, 0, 0);
 
-            // Replace with canvas.
-            el.hide();
-            el.parent().append(c);
+      // Replace with canvas.
+      el.hide();
+      el.parent().append(c);
 
-            // All done - call callback with a new
-            // ImageProcessor object as context.
-            this.processor = new Filtrr2.ImageProcessor(this);
-            if (_callback) {
-                _callback.call(this.processor);
-            }
-            _ready = true;
-
-        }, this);
-    };
-
-    // Original element, usually a picture.
-    this.el = el;
-
-    // When was this created? Mainly for testing purposes.
-    this.created = timestamp;
-
-    // Reference to the image processor.
-    this.processor = null;
-
-    // Reference to the canvas element.
-    this.canvas = null;
-
-    // Setup proxies for the event methods. The ```on()```
-    // method is replaced with a proxy method which sets
-    // the context of all events to ```this```.
-    events = new Filtrr2.Events();
-    this.on = $.proxy(function(ev, callback) {
-        events.on(ev, callback, this);
+      // All done - call callback with a new
+      // ImageProcessor object as context.
+      this.processor = new Filtrr2.ImageProcessor(this);
+      if (_callback) {
+        _callback.call(this.processor);
+      }
+      _ready = true;
     }, this);
-    this.off = events.off;
-    this.trigger = events.trigger;
+  };
 
-    // Register a callback to be called when ```Filtrr2``` is ready. If
-    // it's already ready by the time of this call, the callback
-    // will immediately fire. If a callback was passed through
-    // the ```Filtrr2``` constructor, then any callback passed through
-    // this method will override that.
-    this.ready = function(callback)
-    {
-        if (!callback) {
-            return _ready;
-        }
-        _callback = callback;
-        if (_ready) {
-            _callback.call(this.ip);
-        }
-    };
+  // Original element, usually a picture.
+  this.el = el;
 
-    // Update ```Filtrr2``` through a callback. The callback
-    // is given the ImageProcessor as context. Used to
-    // dynamically update the image with new filters.
-    // This method will only execute if ```Filtrr2``` is ready,
-    // otherwise the callback is ignored.
-    this.update = function(callback)
-    {
-        if (callback) {
-            if (_ready) {
-                callback.call(this.processor);
-            }
-        };
-    };
+  // When was this created? Mainly for testing purposes.
+  this.created = timestamp;
 
-    // 'Forces' a download of the current image. If the
-    // canvas is not ready this is a noop.
-    this.save = function(type)
-    {
-        var data, type = type || "png", mimetype = "image/" + type;
-        if (_ready) {
-            data = this.canvas[0].toDataURL(mimetype);
-            if (data.indexOf(mimetype) == -1) {
-                mimetype = "image/png";
-            }
-            // Force octet-stream.
-            data = data.replace(mimetype, "image/octet-stream")
-            window.location.href = data
-        }
-    };
+  // Reference to the image processor.
+  this.processor = null;
 
-    // Resets the internal buffer of the object. This doesn't
-    // reset the actual canvas. Therefore, you need to call
-    // render() for the reset to take place.
-    this.reset = function()
-    {
-        if (_ready) return this.processor.reset();
-    };
+  // Reference to the canvas element.
+  this.canvas = null;
 
-    // If this is an image we need to replace it with
-    // a canvas element.
-    if (name == "img") {
+  // Setup proxies for the event methods. The ```on()```
+  // method is replaced with a proxy method which sets
+  // the context of all events to ```this```.
+  events = new Filtrr2.Events();
+  this.on = $.proxy(function(ev, callback) {
+    events.on(ev, callback, this);
+  }, this);
+  this.off = events.off;
+  this.trigger = events.trigger;
 
-        repl.call(this, el);
+  // Register a callback to be called when ```Filtrr2``` is ready. If
+  // it's already ready by the time of this call, the callback
+  // will immediately fire. If a callback was passed through
+  // the ```Filtrr2``` constructor, then any callback passed through
+  // this method will override that.
+  this.ready = function(callback) {
+    if (!callback) {
+      return _ready;
+    }
+    _callback = callback;
+    if (_ready) {
+      _callback.call(this.ip);
+    }
+  };
+
+  // Update ```Filtrr2``` through a callback. The callback
+  // is given the ImageProcessor as context. Used to
+  // dynamically update the image with new filters.
+  // This method will only execute if ```Filtrr2``` is ready,
+  // otherwise the callback is ignored.
+  this.update = function(callback) {
+    if (callback) {
+      if (_ready) {
+        callback.call(this.processor);
+      }
+    }
+  };
+
+  // 'Forces' a download of the current image. If the
+  // canvas is not ready this is a noop.
+  this.save = function(type) {
+    var data,
+      type = type || "png",
+      mimetype = "image/" + type;
+    if (_ready) {
+      data = this.canvas[0].toDataURL(mimetype);
+      if (data.indexOf(mimetype) == -1) {
+        mimetype = "image/png";
+      }
+      // Force octet-stream.
+      data = data.replace(mimetype, "image/octet-stream");
+      window.location.href = data;
+    }
+  };
+
+  // Resets the internal buffer of the object. This doesn't
+  // reset the actual canvas. Therefore, you need to call
+  // render() for the reset to take place.
+  this.reset = function() {
+    if (_ready) return this.processor.reset();
+  };
+
+  // If this is an image we need to replace it with
+  // a canvas element.
+  if (name == "img") {
+    repl.call(this, el);
 
     // If this is a canvas element then create the processor
     // immediately.
-    } else if (name == "canvas") {
-
-        this.canvas = el;
-        this.processor = new Filtrr2.ImageProcessor(this);
-        if (_callback) {
-            _callback.call(this.processor);
-        }
-        _ready = true;
+  } else if (name == "canvas") {
+    this.canvas = el;
+    this.processor = new Filtrr2.ImageProcessor(this);
+    if (_callback) {
+      _callback.call(this.processor);
+    }
+    _ready = true;
 
     // Only images and canvas elements are supported.
-    } else {
-        throw new Error("'" + name + "' is an invalid object.");
-    }
+  } else {
+    throw new Error("'" + name + "' is an invalid object.");
+  }
 
-    return this;
+  return this;
 };
 
 // #### Filtrr2
@@ -194,71 +186,67 @@ var F = function(el, callback, timestamp)
 // for testing.
 // The constructor can take an array of options. The only one supported
 // so far is 'store' which if false, will not cache this
-export var Filtrr2 = (function()
-{
-    var store = {};
+export var Filtrr2 = (function() {
+  var store = {};
 
-    // Check for canvas compatibility.
-    if ($("<canvas/>")[0].getContext("2d") == null) {
-        throw new Error("Canvas is not supported in this browser.");
+  // Check for canvas compatibility.
+  if ($("<canvas/>")[0].getContext("2d") == null) {
+    throw new Error("Canvas is not supported in this browser.");
+  }
+
+  return function(_el, callback, options) {
+    var t, el, isSelector, timestamp, key, inst;
+
+    if (options == null) options = { store: true };
+
+    if (typeof _el === "undefined" || _el === null) {
+      throw new Error("The element you gave Filtrr2 was not defined.");
     }
 
-    return function(_el, callback, options) {
+    t = typeof _el;
+    el = _el;
 
-        var t, el, isSelector, timestamp, key, inst;
+    // Is this a string i.e a jQuery selector?
+    isSelector =
+      t === "string" ||
+      (t === "object" && _el.constructor.toString().indexOf("String") > -1);
 
-        if (options == null) options = {store: true};
+    if (isSelector) {
+      key = _el;
+    } else {
+      key = _el.selector;
+    }
 
-        if (typeof _el === 'undefined' || _el === null) {
-            throw new Error("The element you gave Filtrr2 was not defined.");
-        }
+    // If cached return cached F instance.
+    if (store[key]) {
+      return store[key].F;
+    } else {
+      if (isSelector) {
+        el = $(_el);
+      }
 
-        t  = typeof _el;
-        el = _el;
+      // Bad selector!
+      if (el.length === 0) {
+        throw new Error("Element not found.");
+      }
 
-        // Is this a string i.e a jQuery selector?
-        isSelector = (t === 'string'
-            || t === 'object' && _el.constructor.toString().indexOf("String") > -1);
+      timestamp = new Date().getTime();
+      inst = new F(el, callback, timestamp);
+      if (options.store) {
+        store[key] = {
+          timestamp: timestamp,
+          F: inst
+        };
+      }
+      return inst;
+    }
+  };
+})();
 
-        if (isSelector) {
-            key = _el;
-        } else {
-            key = _el.selector;
-        }
-
-        // If cached return cached F instance.
-        if (store[key]) {
-            return store[key].F;
-        } else {
-            if (isSelector) {
-                el = $(_el);
-            }
-
-            // Bad selector!
-            if (el.length === 0) {
-                throw new Error("Element not found.");
-            }
-
-            timestamp = new Date().getTime();
-            inst = new F(el, callback, timestamp);
-            if (options.store) {
-                store[key] = {
-                    timestamp: timestamp,
-                    F: inst
-                };
-            }
-            return inst;
-        }
-    };
-
-}());
-
-Filtrr2.Events = function()
-{
+Filtrr2.Events = function() {
   var registry = {};
 
-  this.on = function(ev, callback, ctx)
-  {
+  this.on = function(ev, callback, ctx) {
     if (!registry[ev]) {
       registry[ev] = [];
     }
@@ -271,9 +259,11 @@ Filtrr2.Events = function()
     });
   };
 
-  this.off = function(ev, callback)
-  {
-    var i = 0, cbacks = [], cb = null, offs = [];
+  this.off = function(ev, callback) {
+    var i = 0,
+      cbacks = [],
+      cb = null,
+      offs = [];
     if (registry[ev] && registry[ev].length > 0) {
       if (!callback) {
         registry[ev] = [];
@@ -291,10 +281,10 @@ Filtrr2.Events = function()
     }
   };
 
-  this.trigger = function(ev)
-  {
+  this.trigger = function(ev) {
     var cbacks = registry[ev],
-      i = null, cb = null,
+      i = null,
+      cb = null,
       args = [].slice.apply(arguments);
     for (i in cbacks) {
       if (cbacks.hasOwnProperty(i)) {
@@ -307,25 +297,25 @@ Filtrr2.Events = function()
   };
 };
 
-Filtrr2.FxStore = (function () {
+Filtrr2.FxStore = (function() {
   var effects = {},
     exports = {},
     count = 0;
 
-  exports.add = function (name, def) {
+  exports.add = function(name, def) {
     effects[name] = def;
     count++;
   };
 
-  exports.count = function () {
+  exports.count = function() {
     return count;
   };
 
-  exports.get = function (name) {
+  exports.get = function(name) {
     return effects[name];
   };
 
-  exports.getNames = function () {
+  exports.getNames = function() {
     var names = [],
       n = null;
     for (n in effects) {
@@ -346,7 +336,7 @@ Filtrr2.FxStore = (function () {
 // effects will be available on any ImageProcessor instance.
 // This method is merely a nice wrapper around the ```Filtrr2.FxStore.add```
 // method.
-Filtrr2.fx = function (name, def) {
+Filtrr2.fx = function(name, def) {
   Filtrr2.FxStore.add(name, def);
 };
 
@@ -362,7 +352,7 @@ Filtrr2.fx = function (name, def) {
 // It is also the context of the update function and it always
 // contains all preset and user-defined effects *up to the point
 // of it's creation*.
-Filtrr2.ImageProcessor = function (F) {
+Filtrr2.ImageProcessor = function(F) {
   var $canvas = F.canvas,
     canvas = $canvas[0];
 
@@ -372,7 +362,7 @@ Filtrr2.ImageProcessor = function (F) {
 
   // Returns a copy of the ImageData object passed
   // as a parameter.
-  var copyImageData = function (imageData) {
+  var copyImageData = function(imageData) {
     var copy = ctx.createImageData(imageData),
       // Store some references for quicker processing.
       cData = copy.data,
@@ -407,8 +397,8 @@ Filtrr2.ImageProcessor = function (F) {
 
   for (i = 0; i < len; i++) {
     n = names[i];
-    this[n] = (function (_n, _f) {
-      return $.proxy(function () {
+    this[n] = (function(_n, _f) {
+      return $.proxy(function() {
         var fx = Filtrr2.FxStore.get(_n);
         _f.trigger(_n + ":preprocess");
         fx.apply(this, arguments);
@@ -426,21 +416,21 @@ Filtrr2.ImageProcessor = function (F) {
   // the canvas element and potentially override any previous rendering
   // by this instance (if called after a render() was already called on
   // this instance).
-  this.dup = function () {
+  this.dup = function() {
     return new Filtrr2.ImageProcessor(_F);
   };
 
-  this.buffer = function () {
+  this.buffer = function() {
     return buffer;
   };
 
-  this.dims = function () {
+  this.dims = function() {
     return { w: w, h: h };
   };
 
   // Resets the buffer to the original buffer by creating
   // a copy of it.
-  this.reset = function () {
+  this.reset = function() {
     buffer = copyImageData(originalBuffer);
     return this;
   };
@@ -448,7 +438,7 @@ Filtrr2.ImageProcessor = function (F) {
   // Put another layer on top of this ImageProcessor. The other
   // layer needs to be another ImageProcessor object, usually
   // created by using the ```dup()``` method.
-  this.layer = function (type, top) {
+  this.layer = function(type, top) {
     layers.merge(type, this, top);
     return this;
   };
@@ -461,7 +451,7 @@ Filtrr2.ImageProcessor = function (F) {
   // application in the case of chained effects.
   // The render method takes a callback which is
   // called after it is finished.
-  this.render = function (callback) {
+  this.render = function(callback) {
     _F.trigger("prerender");
     ctx.putImageData(buffer, 0, 0);
     _F.trigger("postrender");
@@ -478,7 +468,7 @@ Filtrr2.ImageProcessor = function (F) {
   // buffer in-place.
   // The values returned from ```procfn``` are clamped
   // so that they are in the range [0,255].
-  this.process = function (procfn) {
+  this.process = function(procfn) {
     var data = buffer.data;
     var i = 0,
       j = 0;
@@ -491,7 +481,7 @@ Filtrr2.ImageProcessor = function (F) {
           r: data[index],
           g: data[index + 1],
           b: data[index + 2],
-          a: data[index + 3],
+          a: data[index + 3]
         };
 
         // Process the tuple.
@@ -516,7 +506,7 @@ Filtrr2.ImageProcessor = function (F) {
   // because each new pixel value depends on the original
   // neighbouring values of that pixel (i.e the values residing)
   // inside the kernel.
-  this.convolve = function (kernel) {
+  this.convolve = function(kernel) {
     if (!ctx.createImageData) {
       throw "createImageData is not supported.";
     }
@@ -570,18 +560,26 @@ Filtrr2.ImageProcessor = function (F) {
 // below is a good tutorial on how to create your own effects.
 
 // #### Adjust [No Range]
-Filtrr2.fx("adjust", function (pr, pg, pb) {
-  this.process(function (rgba) {
+Filtrr2.fx("adjust", function(pr, pg, pb) {
+  this.process(function(rgba) {
     rgba.r *= 1 + pr;
     rgba.g *= 1 + pg;
     rgba.b *= 1 + pb;
   });
 });
 
+// #### Temperature [-255, 255]
+Filtrr2.fx("temperature", function(p) {
+  this.process(function(rgba) {
+    rgba.r = rgba.r + p > 255 ? 255 : rgba.r + p;
+    rgba.b = rgba.b - p < 0 ? 0 : rgba.b - p;
+  });
+});
+
 // #### Brighten [-100, 100]
-Filtrr2.fx("brighten", function (p) {
+Filtrr2.fx("brighten", function(p) {
   p = Filtrr2.Util.normalize(p, -255, 255, -100, 100);
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.r += p;
     rgba.g += p;
     rgba.b += p;
@@ -589,17 +587,17 @@ Filtrr2.fx("brighten", function (p) {
 });
 
 // #### Alpha [-100, 100]
-Filtrr2.fx("alpha", function (p) {
+Filtrr2.fx("alpha", function(p) {
   p = Filtrr2.Util.normalize(p, 0, 255, -100, 100);
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.a = p;
   });
 });
 
 // #### Saturate [-100, 100]
-Filtrr2.fx("saturate", function (p) {
+Filtrr2.fx("saturate", function(p) {
   p = Filtrr2.Util.normalize(p, 0, 2, -100, 100);
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     var avg = (rgba.r + rgba.g + rgba.b) / 3;
     rgba.r = avg + p * (rgba.r - avg);
     rgba.g = avg + p * (rgba.g - avg);
@@ -608,8 +606,8 @@ Filtrr2.fx("saturate", function (p) {
 });
 
 // #### Invert
-Filtrr2.fx("invert", function () {
-  this.process(function (rgba) {
+Filtrr2.fx("invert", function() {
+  this.process(function(rgba) {
     rgba.r = 255 - rgba.r;
     rgba.g = 255 - rgba.g;
     rgba.b = 255 - rgba.b;
@@ -617,10 +615,10 @@ Filtrr2.fx("invert", function () {
 });
 
 // #### Posterize [1, 255]
-Filtrr2.fx("posterize", function (p) {
+Filtrr2.fx("posterize", function(p) {
   p = Filtrr2.Util.clamp(p, 1, 255);
   var step = Math.floor(255 / p);
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.r = Math.floor(rgba.r / step) * step;
     rgba.g = Math.floor(rgba.g / step) * step;
     rgba.b = Math.floor(rgba.b / step) * step;
@@ -628,9 +626,9 @@ Filtrr2.fx("posterize", function (p) {
 });
 
 // #### Gamma [-100, 100]
-Filtrr2.fx("gamma", function (p) {
+Filtrr2.fx("gamma", function(p) {
   p = Filtrr2.Util.normalize(p, 0, 2, -100, 100);
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.r = Math.pow(rgba.r, p);
     rgba.g = Math.pow(rgba.g, p);
     rgba.b = Math.pow(rgba.b, p);
@@ -638,12 +636,12 @@ Filtrr2.fx("gamma", function (p) {
 });
 
 // #### Constrast [-100, 100]
-Filtrr2.fx("contrast", function (p) {
+Filtrr2.fx("contrast", function(p) {
   p = Filtrr2.Util.normalize(p, 0, 2, -100, 100);
   function c(f, c) {
     return (f - 0.5) * c + 0.5;
   }
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.r = 255 * c(rgba.r / 255, p);
     rgba.g = 255 * c(rgba.g / 255, p);
     rgba.b = 255 * c(rgba.b / 255, p);
@@ -651,8 +649,8 @@ Filtrr2.fx("contrast", function (p) {
 });
 
 // #### Sepia
-Filtrr2.fx("sepia", function () {
-  this.process(function (rgba) {
+Filtrr2.fx("sepia", function() {
+  this.process(function(rgba) {
     var r = rgba.r,
       g = rgba.g,
       b = rgba.b;
@@ -663,8 +661,8 @@ Filtrr2.fx("sepia", function () {
 });
 
 // #### Subtract [No Range]
-Filtrr2.fx("subtract", function (r, g, b) {
-  this.process(function (rgba) {
+Filtrr2.fx("subtract", function(r, g, b) {
+  this.process(function(rgba) {
     rgba.r -= r;
     rgba.g -= g;
     rgba.b -= b;
@@ -672,8 +670,8 @@ Filtrr2.fx("subtract", function (r, g, b) {
 });
 
 // #### Fill [No Range]
-Filtrr2.fx("fill", function (r, g, b) {
-  this.process(function (rgba) {
+Filtrr2.fx("fill", function(r, g, b) {
+  this.process(function(rgba) {
     rgba.r = r;
     rgba.g = g;
     rgba.b = b;
@@ -681,13 +679,13 @@ Filtrr2.fx("fill", function (r, g, b) {
 });
 
 // #### Blur ['simple', 'gaussian']
-Filtrr2.fx("blur", function (t) {
+Filtrr2.fx("blur", function(t) {
   t = t || "simple";
   if (t == "simple") {
     this.convolve([
       [1 / 9, 1 / 9, 1 / 9],
       [1 / 9, 1 / 9, 1 / 9],
-      [1 / 9, 1 / 9, 1 / 9],
+      [1 / 9, 1 / 9, 1 / 9]
     ]);
   } else if (t == "gaussian") {
     this.convolve([
@@ -695,25 +693,25 @@ Filtrr2.fx("blur", function (t) {
       [4 / 273, 16 / 273, 26 / 273, 16 / 273, 4 / 273],
       [7 / 273, 26 / 273, 41 / 273, 26 / 273, 7 / 273],
       [4 / 273, 16 / 273, 26 / 273, 16 / 273, 4 / 273],
-      [1 / 273, 4 / 273, 7 / 273, 4 / 273, 1 / 273],
+      [1 / 273, 4 / 273, 7 / 273, 4 / 273, 1 / 273]
     ]);
   }
 });
 
 // #### Sharpen
-Filtrr2.fx("sharpen", function () {
+Filtrr2.fx("sharpen", function() {
   this.convolve([
     [0.0, -0.2, 0.0],
     [-0.2, 1.8, -0.2],
-    [0.0, -0.2, 0.0],
+    [0.0, -0.2, 0.0]
   ]);
 });
 
 // #### Curves
-Filtrr2.fx("curves", function (s, c1, c2, e) {
+Filtrr2.fx("curves", function(s, c1, c2, e) {
   var bezier = new Filtrr2.Util.Bezier(s, c1, c2, e),
     points = bezier.genColorTable();
-  this.process(function (rgba) {
+  this.process(function(rgba) {
     rgba.r = points[rgba.r];
     rgba.g = points[rgba.g];
     rgba.b = points[rgba.b];
@@ -721,29 +719,30 @@ Filtrr2.fx("curves", function (s, c1, c2, e) {
 });
 
 // #### Expose [-100, 100]
-Filtrr2.fx("expose", function (p) {
+Filtrr2.fx("expose", function(p) {
   var p = Filtrr2.Util.normalize(p, -1, 1, -100, 100),
     c1 = { x: 0, y: 255 * p },
     c2 = { x: 255 - 255 * p, y: 255 };
   this.curves({ x: 0, y: 0 }, c1, c2, { x: 255, y: 255 });
 });
 
-Filtrr2.Layers = function()
-{
+Filtrr2.Layers = function() {
   var clamp = Filtrr2.Util.clamp;
 
-  var apply = function(bottom, top, fn)
-  {
+  var apply = function(bottom, top, fn) {
     var bottomData = bottom.buffer().data,
-      topData    = top.buffer().data,
-      i = 0, j = 0,
+      topData = top.buffer().data,
+      i = 0,
+      j = 0,
       h = Math.min(bottom.dims().h, top.dims().h),
       w = Math.min(bottom.dims().w, top.dims().w),
-      index, brgba, trgba;
+      index,
+      brgba,
+      trgba;
 
     for (i = 0; i < h; i++) {
       for (j = 0; j < w; j++) {
-        index = (i*w*4) + (j*4);
+        index = i * w * 4 + j * 4;
 
         // Create bottom/top rgbas.
         brgba = {
@@ -763,7 +762,7 @@ Filtrr2.Layers = function()
         fn(brgba, trgba);
 
         // Re-assign data.
-        bottomData[index]     = clamp(brgba.r);
+        bottomData[index] = clamp(brgba.r);
         bottomData[index + 1] = clamp(brgba.g);
         bottomData[index + 2] = clamp(brgba.b);
         bottomData[index + 3] = clamp(brgba.a);
@@ -772,82 +771,71 @@ Filtrr2.Layers = function()
   };
 
   var layers = {
-
-    multiply: function(bottom, top)
-    {
-      apply(bottom, top, function(b, t)
-      {
+    multiply: function(bottom, top) {
+      apply(bottom, top, function(b, t) {
         b.r = (t.r * b.r) / 255;
         b.g = (t.g * b.g) / 255;
         b.b = (t.b * b.b) / 255;
       });
     },
 
-    screen: function(bottom, top)
-    {
-      apply(bottom, top, function(b, t)
-      {
-        b.r = 255 - (((255 - t.r) * (255 - b.r)) / 255);
-        b.g = 255 - (((255 - t.g) * (255 - b.g)) / 255);
-        b.b = 255 - (((255 - t.b) * (255 - b.b)) / 255);
+    screen: function(bottom, top) {
+      apply(bottom, top, function(b, t) {
+        b.r = 255 - ((255 - t.r) * (255 - b.r)) / 255;
+        b.g = 255 - ((255 - t.g) * (255 - b.g)) / 255;
+        b.b = 255 - ((255 - t.b) * (255 - b.b)) / 255;
       });
     },
 
-    overlay: function(bottom, top)
-    {
+    overlay: function(bottom, top) {
       var c = function(b, t) {
-        return (b > 128) ? 255 - 2 * (255 - t) * (255 - b) / 255: (b * t * 2) / 255;
+        return b > 128
+          ? 255 - (2 * (255 - t) * (255 - b)) / 255
+          : (b * t * 2) / 255;
       };
 
-      apply(bottom, top, function(b, t)
-      {
+      apply(bottom, top, function(b, t) {
         b.r = c(b.r, t.r);
         b.g = c(b.g, t.g);
-        b.b = c(b.b, t.b)
+        b.b = c(b.b, t.b);
       });
     },
 
     // Thanks to @olivierlesnicki for suggesting a better algoritm.
-    softLight: function(bottom, top)
-    {
+    softLight: function(bottom, top) {
       var c = function(b, t) {
         b /= 255;
         t /= 255;
-        return (t < 0.5) ? 255*((1-2*t)*b*b + 2*t*b) : 255*((1-(2*t-1))*b+(2*t-1)*Math.pow(b, 0.5));
+        return t < 0.5
+          ? 255 * ((1 - 2 * t) * b * b + 2 * t * b)
+          : 255 * ((1 - (2 * t - 1)) * b + (2 * t - 1) * Math.pow(b, 0.5));
       };
-      apply(bottom, top, function(b, t)
-      {
+      apply(bottom, top, function(b, t) {
         b.r = c(b.r, t.r);
         b.g = c(b.g, t.g);
-        b.b = c(b.b, t.b)
+        b.b = c(b.b, t.b);
       });
     },
 
-    addition: function(bottom, top)
-    {
-      apply(bottom, top, function(b, t)
-      {
+    addition: function(bottom, top) {
+      apply(bottom, top, function(b, t) {
         b.r += t.r;
         b.g += t.g;
         b.b += t.b;
       });
     },
 
-    exclusion: function(bottom, top)
-    {
-      apply(bottom, top, function(b, t)
-      {
-        b.r = 128 - 2 * (b.r - 128) * (t.r - 128) / 255;
-        b.g = 128 - 2 * (b.g - 128) * (t.g - 128) / 255;
-        b.b = 128 - 2 * (b.b - 128) * (t.b - 128) / 255;
+    exclusion: function(bottom, top) {
+      apply(bottom, top, function(b, t) {
+        b.r = 128 - (2 * (b.r - 128) * (t.r - 128)) / 255;
+        b.g = 128 - (2 * (b.g - 128) * (t.g - 128)) / 255;
+        b.b = 128 - (2 * (b.b - 128) * (t.b - 128)) / 255;
       });
     },
 
-    difference: function(bottom, top)
-    {
+    difference: function(bottom, top) {
       var abs = Math.abs;
-      apply(bottom, top, function(b, t)
-      {
+      apply(bottom, top, function(b, t) {
         b.r = abs(t.r - b.r);
         b.g = abs(t.g - b.g);
         b.b = abs(t.b - b.b);
@@ -858,8 +846,7 @@ Filtrr2.Layers = function()
   // Merges two layers. Takes a ```type``` parameter and
   // a bottom and top layer. The ```type``` parameter specifies
   // the blending mode.
-  this.merge = function(type, bottom, top)
-  {
+  this.merge = function(type, bottom, top) {
     if (layers[type] != null) {
       layers[type](bottom, top);
     } else {
@@ -868,49 +855,49 @@ Filtrr2.Layers = function()
   };
 };
 
-Filtrr2.Util = (function()
-{
-
+Filtrr2.Util = (function() {
   var exports = {},
-
-    clamp = function(val, min, max)
-    {
+    clamp = function(val, min, max) {
       min = min || 0;
       max = max || 255;
       return Math.min(max, Math.max(min, val));
     },
-
-    dist = function(x1, x2)
-    {
+    dist = function(x1, x2) {
       return Math.sqrt(Math.pow(x2 - x1, 2));
     },
-
-    normalize = function(val, dmin, dmax, smin, smax)
-    {
+    normalize = function(val, dmin, dmax, smin, smax) {
       var sdist = dist(smin, smax),
         ddist = dist(dmin, dmax),
         ratio = ddist / sdist,
-        val   = clamp(val, smin, smax);
-      return dmin + (val-smin) * ratio;
+        val = clamp(val, smin, smax);
+      return dmin + (val - smin) * ratio;
     },
-
     // **Adapted from (with special thanks)** <br>
     // 13thParallel.org Beziér Curve Code <br>
     // *by Dan Pupius (www.pupius.net)*
-    Bezier = function(C1, C2, C3, C4)
-    {
-      var C1 = C1, C2 = C2, C3 = C3, C4 = C4;
-      var B1 = function(t){ return t*t*t; }
-      var B2 = function(t){ return 3*t*t*(1-t); }
-      var B3 = function(t){ return 3*t*(1-t)*(1-t); }
-      var B4 = function(t){ return (1-t)*(1-t)*(1-t); }
+    Bezier = function(C1, C2, C3, C4) {
+      var C1 = C1,
+        C2 = C2,
+        C3 = C3,
+        C4 = C4;
+      var B1 = function(t) {
+        return t * t * t;
+      };
+      var B2 = function(t) {
+        return 3 * t * t * (1 - t);
+      };
+      var B3 = function(t) {
+        return 3 * t * (1 - t) * (1 - t);
+      };
+      var B4 = function(t) {
+        return (1 - t) * (1 - t) * (1 - t);
+      };
 
-      var getPoint = function(t)
-      {
+      var getPoint = function(t) {
         return {
-          x: C1.x*B1(t) + C2.x*B2(t) + C3.x*B3(t) + C4.x*B4(t),
-          y: C1.y*B1(t) + C2.y*B2(t) + C3.y*B3(t) + C4.y*B4(t)
-        }
+          x: C1.x * B1(t) + C2.x * B2(t) + C3.x * B3(t) + C4.x * B4(t),
+          y: C1.y * B1(t) + C2.y * B2(t) + C3.y * B3(t) + C4.y * B4(t)
+        };
       };
 
       // Creates a color table for 1024 points. To create the table
@@ -918,24 +905,21 @@ Filtrr2.Util = (function()
       // loop iteration and map is created for [x] = y. This is then
       // used to project a color RGB value (x) to another color RGB
       // value (y).
-      this.genColorTable = function()
-      {
+      this.genColorTable = function() {
         var points = {};
-        var i; for (i = 0; i < 1024; i++)
-      {
-        var point = getPoint(i/1024);
-        points[parseInt(point.x)] = parseInt(point.y);
-      };
+        var i;
+        for (i = 0; i < 1024; i++) {
+          var point = getPoint(i / 1024);
+          points[parseInt(point.x)] = parseInt(point.y);
+        }
         return points;
       };
     };
 
   exports.clamp = clamp;
-  exports.dist  = dist;
+  exports.dist = dist;
   exports.normalize = normalize;
   exports.Bezier = Bezier;
 
   return exports;
-
-}());
-
+})();

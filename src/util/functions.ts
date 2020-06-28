@@ -7,7 +7,7 @@ const { ipcRenderer } = require("electron");
 const nativeImage = require("electron").nativeImage;
 
 export const loadImageNames = (directory: string) =>
-  fs.readdirSync(directory).filter((element) => {
+  fs.readdirSync(directory).filter(element => {
     const splitFileName = element.split(".");
     return (
       splitFileName.length == 2 &&
@@ -56,18 +56,23 @@ export const rotateImage = async (path, direction: Directions) => {
 
   const resultImage = nativeImage.createFromBuffer(resultBuffer, {
     width: size.height,
-    height: size.width,
+    height: size.width
   });
 
+  let imageData;
   switch (fileExtension) {
     case "png":
-      return fs.writeFileSync(path, resultImage.toPNG());
+      imageData = resultImage.toPNG();
+      break;
     case "jpg":
     case "jpeg":
-      return fs.writeFileSync(path, resultImage.toJPEG(100));
+      imageData = resultImage.toJPEG(100);
+      break;
     default:
-      throw Error("Unknown file extension");
+      throw Error("Unbekannte Dateiendung");
   }
+
+  return fs.writeFileSync(path, imageData);
 };
 
 const rotate90degrees = (bitmap, size, counterClockwise) => {

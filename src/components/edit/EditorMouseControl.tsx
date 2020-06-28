@@ -4,25 +4,26 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 import styled from "styled-components";
 import NavigateBefore from "@material-ui/icons/NavigateBefore";
 import NavigateNext from "@material-ui/icons/NavigateNext";
-import Redo from "@material-ui/icons/Redo";
-import Undo from "@material-ui/icons/Undo";
 import SaveIcon from "@material-ui/icons/Save";
 import { BLUE } from "../../util/constants";
 import { HidingButton } from "../HidingButton";
-import ExposureIcon from "@material-ui/icons/Exposure";
-import InvertColorsIcon from "@material-ui/icons/InvertColors";
-import Brightness7Icon from "@material-ui/icons/Brightness7";
-import HighQualityIcon from "@material-ui/icons/HighQuality";
-import TonalityIcon from "@material-ui/icons/Tonality";
-import IsoIcon from "@material-ui/icons/Iso";
+import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import { Slider } from "@material-ui/core";
 import { EditorContext } from "./EditorContext";
-import Icon from "@material-ui/core/Icon";
+import Tooltip from "@material-ui/core/Tooltip";
+import {
+  FaThermometerHalf,
+  IoMdContrast,
+  MdBrightnessMedium,
+  MdExposure,
+  MdHighQuality,
+  MdInvertColors
+} from "react-icons/all";
 
 const StyledDiv = styled.div`
   position: absolute;
@@ -38,8 +39,9 @@ const StyledDiv = styled.div`
     "left . . . . . edit edit right"
     "left . . . . . edit edit right"
     "left . . . save . . . right";
-  opacity: 1; //TODO
+  opacity: 0;
   transition: opacity 0.4s;
+  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
 `;
 
 const SliderContainerContainer = styled.div`
@@ -65,47 +67,54 @@ const editIconStyle = {
   cursor: "pointer",
   color: BLUE,
   fontSize: "2em",
-  margin: "auto",
+  margin: "auto"
 };
 
 const iconStyle = {
-  color: "white",
-  filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.5)",
+  color: "white"
 };
 
 const smallIconStyle = {
   ...iconStyle,
-  fontSize: 70,
+  fontSize: 70
 };
 
 const largeIconStyle = {
   ...iconStyle,
-  fontSize: 120,
+  fontSize: 120
 };
 
 interface EditorMouseControlProps {
-  handlePrevious: () => void;
-  handleNext: () => void;
+  disabled: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  onSave: () => void;
 }
 
 export const EditorMouseControl: FC<EditorMouseControlProps> = ({
-  handlePrevious,
-  handleNext,
+  disabled,
+  onPrevious: handlePrevious,
+  onNext: handleNext,
+  onSave: handleSave
 }) => {
   const {
-    brighten,
-    setBrighten,
-    saturate,
-    setSaturate,
-    expose,
-    setExpose,
-    sharpen,
-    setSharpen,
-    contrast,
-    setContrast,
-    gamma,
-    setGamma,
+    brightenValue,
+    setBrightenValue,
+    saturateValue,
+    setSaturateValue,
+    exposeValue,
+    setExposeValue,
+    sharpenValue,
+    setSharpenValue,
+    contrastValue,
+    setContrastValue,
+    gammaValue,
+    setGammaValue,
+    temperatureValue,
+    setTemperatureValue
   } = useContext(EditorContext);
+
+  const containerDiv = useRef<HTMLDivElement>(null);
 
   const [brightenState, setBrightenState] = useState<number>(0);
   const [saturateState, setSaturateState] = useState<number>(0);
@@ -113,88 +122,126 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
   const [sharpenState, setSharpenState] = useState<number>(0);
   const [contrastState, setContrastState] = useState<number>(0);
   const [gammaState, setGammaState] = useState<number>(0);
+  const [temperatureState, setTemperatureState] = useState<number>(0);
+
+  useEffect(() => {
+    setBrightenState(brightenValue);
+  }, [brightenValue]);
+  useEffect(() => {
+    setSaturateState(saturateValue);
+  }, [saturateValue]);
+  useEffect(() => {
+    setExposeState(exposeValue);
+  }, [exposeValue]);
+  useEffect(() => {
+    setSharpenState(sharpenValue);
+  }, [sharpenValue]);
+  useEffect(() => {
+    setContrastState(contrastValue);
+  }, [contrastValue]);
+  useEffect(() => {
+    setGammaState(gammaValue);
+  }, [gammaValue]);
+  useEffect(() => {
+    setTemperatureState(temperatureValue);
+  }, [temperatureValue]);
 
   const handleBrightenChange = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setBrightenState(value as number);
+    !disabled && setBrightenState(value as number);
   };
   const handleBrightenCommit = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setBrighten(value as number);
+    !disabled && setBrightenValue(value as number);
   };
   const handleSaturateChange = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setSaturateState(value as number);
+    !disabled && setSaturateState(value as number);
   };
   const handleSaturateCommit = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setSaturate(value as number);
+    !disabled && setSaturateValue(value as number);
   };
   const handleExposeChange = (event: ChangeEvent, value: number | number[]) => {
     setExposeState(value as number);
   };
   const handleExposeCommit = (event: ChangeEvent, value: number | number[]) => {
-    setExpose(value as number);
+    !disabled && setExposeValue(value as number);
   };
   const handleSharpenChange = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setSharpenState(value as number);
+    !disabled && setSharpenState(value as number);
   };
   const handleSharpenCommit = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setSharpen(value as number);
+    !disabled && setSharpenValue(value as number);
   };
   const handleContrastChange = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setContrastState(value as number);
+    !disabled && setContrastState(value as number);
   };
   const handleContrastCommit = (
     event: ChangeEvent,
     value: number | number[]
   ) => {
-    setContrast(value as number);
+    !disabled && setContrastValue(value as number);
   };
   const handleGammaChange = (event: ChangeEvent, value: number | number[]) => {
-    setGammaState(value as number);
+    !disabled && setGammaState(value as number);
   };
   const handleGammaCommit = (event: ChangeEvent, value: number | number[]) => {
-    setGamma(value as number);
+    !disabled && setGammaValue(value as number);
+  };
+  const handleTemperatureChange = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setTemperatureState(value as number);
+  };
+  const handleTemperatureCommit = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setTemperatureValue(value as number);
   };
 
-  const containerDiv = useRef(null);
+  const showControls = () => {
+    containerDiv.current.style.opacity = "1";
+  };
+
+  const hideControls = () => {
+    containerDiv.current.style.opacity = "0";
+  };
 
   return (
     <StyledDiv ref={containerDiv}>
-      <HidingButton
-        style={{ gridArea: "left" }}
-        title="Vorheriges Bild (A)"
-        onClick={handlePrevious}
-      >
-        <NavigateBefore style={largeIconStyle} />
-      </HidingButton>
       <SliderContainerContainer style={{ gridArea: "edit" }}>
-        <SliderContainer>
-          <Brightness7Icon
-            style={editIconStyle}
-            onClick={() => {
-              setBrighten(0);
-              setBrightenState(0);
-            }}
-          />
+        <SliderContainer
+          onMouseEnter={showControls}
+          onMouseLeave={hideControls}
+        >
+          <Tooltip title="Helligkeit">
+            <MdBrightnessMedium
+              style={editIconStyle}
+              onClick={() => {
+                setBrightenValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -202,13 +249,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleBrightenChange}
             onChangeCommitted={handleBrightenCommit}
           />
-          <InvertColorsIcon
-            style={editIconStyle}
-            onClick={() => {
-              setSaturate(0);
-              setSaturateState(0);
-            }}
-          />
+          <Tooltip title="Sättigung">
+            <MdInvertColors
+              style={editIconStyle}
+              onClick={() => {
+                setSaturateValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -216,13 +264,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleSaturateChange}
             onChangeCommitted={handleSaturateCommit}
           />
-          <ExposureIcon
-            style={editIconStyle}
-            onClick={() => {
-              setExpose(0);
-              setExposeState(0);
-            }}
-          />
+          <Tooltip title="Belichtung">
+            <WbSunnyIcon
+              style={editIconStyle}
+              onClick={() => {
+                setExposeValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -230,13 +279,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleExposeChange}
             onChangeCommitted={handleExposeCommit}
           />
-          <HighQualityIcon
-            style={editIconStyle}
-            onClick={() => {
-              setSharpen(0);
-              setSharpenState(0);
-            }}
-          />
+          <Tooltip title="Schärfe">
+            <MdHighQuality
+              style={editIconStyle}
+              onClick={() => {
+                setSharpenValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={0}
             max={100}
@@ -244,13 +294,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleSharpenChange}
             onChangeCommitted={handleSharpenCommit}
           />
-          <TonalityIcon
-            style={editIconStyle}
-            onClick={() => {
-              setContrast(0);
-              setContrastState(0);
-            }}
-          />
+          <Tooltip title="Kontrast">
+            <IoMdContrast
+              style={editIconStyle}
+              onClick={() => {
+                setContrastValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -258,13 +309,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleContrastChange}
             onChangeCommitted={handleContrastCommit}
           />
-          <IsoIcon
-            style={editIconStyle}
-            onClick={() => {
-              setGamma(0);
-              setGammaState(0);
-            }}
-          />
+          <Tooltip title="Gamma">
+            <MdExposure
+              style={editIconStyle}
+              onClick={() => {
+                setGammaValue(0);
+              }}
+            />
+          </Tooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -272,8 +324,31 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleGammaChange}
             onChangeCommitted={handleGammaCommit}
           />
+          <Tooltip title="Temperatur">
+            <FaThermometerHalf
+              style={editIconStyle}
+              onClick={() => {
+                setTemperatureValue(0);
+              }}
+            />
+          </Tooltip>
+          <StyledSlider
+            min={-100}
+            max={100}
+            value={temperatureState}
+            onChange={handleTemperatureChange}
+            onChangeCommitted={handleTemperatureCommit}
+          />
         </SliderContainer>
       </SliderContainerContainer>
+
+      <HidingButton
+        style={{ gridArea: "left" }}
+        title="Vorheriges Bild (A)"
+        onClick={handlePrevious}
+      >
+        <NavigateBefore style={largeIconStyle} />
+      </HidingButton>
       <HidingButton
         style={{ gridArea: "right" }}
         title="Nächstes Bild (D)"
@@ -281,7 +356,7 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
       >
         <NavigateNext style={largeIconStyle} />
       </HidingButton>
-      <HidingButton style={{ gridArea: "save" }} title="Speichern">
+      <HidingButton onClick={handleSave} style={{ gridArea: "save" }} title="Speichern">
         <SaveIcon style={{ ...smallIconStyle, color: BLUE }} />
       </HidingButton>
     </StyledDiv>
