@@ -2,9 +2,12 @@ import React, { FC, useCallback, useContext } from "react";
 import { AppContext } from "./AppContextProvider";
 import { Pages } from "../Pages";
 import { ToolSelector } from "./ToolSelector";
-import { SortSelector } from "./SortSelector";
-import { ImageSelector } from "./ImageSelector";
+import { SelectFolderSelect } from "./select/SelectFolderSelect";
+import { ImageSelector } from "./select/ImageSelector";
 import { Header } from "./Header";
+import { EditFolderSelect } from "./edit/EditFolderSelect";
+import { ImageEditor } from "./edit/ImageEditor";
+import { EditorContextProvider } from "./edit/EditorContext";
 
 export const MainComponent: FC = () => {
   const { page, setPage } = useContext(AppContext);
@@ -16,16 +19,20 @@ export const MainComponent: FC = () => {
       component = <ToolSelector />;
       break;
     case Pages.SORT_FOLDER_SELECT:
-      component = <SortSelector />;
+      component = <SelectFolderSelect />;
       break;
     case Pages.SORT:
       component = <ImageSelector />;
       break;
     case Pages.EDIT_FOLDER_SELECT:
-      component = "WIP";
+      component = <EditFolderSelect />;
       break;
     case Pages.EDIT:
-      component = "WIP";
+      component = (
+        <EditorContextProvider>
+          <ImageEditor />
+        </EditorContextProvider>
+      );
   }
 
   const handleBackClick = useCallback(() => {
@@ -54,7 +61,7 @@ export const MainComponent: FC = () => {
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
-        position: "relative"
+        position: "relative",
       }}
     >
       {page !== Pages.TOOL_SELECT && <Header onBackClick={handleBackClick} />}

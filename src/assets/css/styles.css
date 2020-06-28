@@ -17,20 +17,42 @@ html {
   color: #505050;
 }
 
-body, #root {
+body,
+#root {
   margin: 0;
   height: 100%;
   width: 100%;
 }
 
 @keyframes shake {
-  0% {transform: translateX(0px)}
-  16.7% {transform: translateX(-20px)}
-  50% {transform: translateX(20px)}
-  83.3% {transform: translateX(-20px)}
-  100% {transform: translateX(0px)}
+  0% {
+    transform: translateX(0px);
+  }
+  16.7% {
+    transform: translateX(-20px);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+  83.3% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }
 
-button:focus, div:focus {
+button:focus,
+div:focus {
   outline: none;
+}
+
+.MuiSlider-thumb:focus,
+.MuiSlider-thumb:hover,
+.MuiSlider-thumb:active {
+  box-shadow: inherit !important;
+}
+
+.MuiSlider-thumb {
+  background-color: #5b8da3 !important;
 }

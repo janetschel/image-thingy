@@ -1,4 +1,5 @@
 import "../assets/css/styles.css";
+import "../filtrr2/loader.js";
 import React, { Component } from "react";
 import { AppContextProvider } from "./AppContextProvider";
 import { MainComponent } from "./MainComponent";

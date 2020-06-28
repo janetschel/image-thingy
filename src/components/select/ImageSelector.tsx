@@ -1,10 +1,10 @@
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
-import { AppContext } from "./AppContextProvider";
+import { AppContext } from "../AppContextProvider";
 import styled from "styled-components";
 import { Beenhere } from "@material-ui/icons";
-import { BLUE, HEADER_HEIGHT } from "../util/constants";
-import { loadImageNames, rotateImage } from "../util/functions";
-import { Directions } from "../util/enums";
+import { BLUE, HEADER_HEIGHT } from "../../util/constants";
+import { loadImageNames, rotateImage } from "../../util/functions";
+import { Directions } from "../../util/enums";
 import { SelectorMouseControl } from "./SelectorMouseControl";
 
 const fs = require("fs");

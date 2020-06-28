@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import { BLUE } from "./constants";
+import React, { FC, MutableRefObject } from "react";
 
 export const Headline = styled.span`
   font-size: 150%;
   text-align: center;
-  margin: 1em 0 1em 0;
+  padding: 1em 0 1em 0;
+  display: inline-block;
 `;
 
 export const Button = styled.div`
@@ -20,7 +22,7 @@ export const Button = styled.div`
 `;
 
 export const IconButton = styled(Button)`
-display: grid;
-gap: 5px;
-grid-template-columns: 1fr min-content;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 1fr min-content;
 `;
