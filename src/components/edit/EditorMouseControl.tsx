@@ -16,14 +16,14 @@ import WbSunnyIcon from "@material-ui/icons/WbSunny";
 import { Slider } from "@material-ui/core";
 import { EditorContext } from "./EditorContext";
 import Tooltip from "@material-ui/core/Tooltip";
+import { FaThermometerHalf } from "react-icons/fa";
 import {
-  FaThermometerHalf,
-  IoMdContrast,
   MdBrightnessMedium,
   MdExposure,
   MdHighQuality,
   MdInvertColors
-} from "react-icons/all";
+} from "react-icons/md";
+import { IoMdContrast } from "react-icons/io";
 
 const StyledDiv = styled.div`
   position: absolute;
@@ -34,20 +34,23 @@ const StyledDiv = styled.div`
   grid-template-columns: repeat(9, minmax(auto, 1fr));
   grid-auto-rows: 1fr;
   grid-template-areas:
-    "left . . . . . edit edit right"
-    "left . . . . . edit edit right"
-    "left . . . . . edit edit right"
-    "left . . . . . edit edit right"
+    "left . . edit edit edit edit edit right"
+    "left . . edit edit edit edit edit right"
+    "left . . edit edit edit edit edit right"
+    "left . . edit edit edit edit edit right"
     "left . . . save . . . right";
   opacity: 0;
   transition: opacity 0.4s;
-  filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
 `;
 
 const SliderContainerContainer = styled.div`
   height: 100%;
+  width: 500px;
   display: flex;
   align-items: center;
+  align-self: end;
+  margin-left: auto;
 `;
 
 const SliderContainer = styled.div`
@@ -356,7 +359,11 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
       >
         <NavigateNext style={largeIconStyle} />
       </HidingButton>
-      <HidingButton onClick={handleSave} style={{ gridArea: "save" }} title="Speichern">
+      <HidingButton
+        onClick={handleSave}
+        style={{ gridArea: "save" }}
+        title="Speichern"
+      >
         <SaveIcon style={{ ...smallIconStyle, color: BLUE }} />
       </HidingButton>
     </StyledDiv>

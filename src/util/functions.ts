@@ -3,7 +3,6 @@ import { Directions } from "./enums";
 import { MutableRefObject } from "react";
 
 const fs = require("fs");
-const { ipcRenderer } = require("electron");
 const nativeImage = require("electron").nativeImage;
 
 export const loadImageNames = (directory: string) =>
@@ -14,34 +13,6 @@ export const loadImageNames = (directory: string) =>
       EXTENSIONS.includes(splitFileName[1].toLowerCase())
     );
   });
-
-//Use this to get the image size if you want to rotate them using CSS
-export const calcImageMultiplicator = async (
-  path: string,
-  available: { width: number; height: number },
-  rotated: boolean
-): Promise<{ width: number; height: number }> => {
-  const dimensions: {
-    width: number;
-    height: number;
-  } = await ipcRenderer.invoke("get-image-dimensions", path);
-
-  const imageWidth = rotated ? dimensions.height : dimensions.width;
-  const imageHeight = rotated ? dimensions.width : dimensions.height;
-
-  let mul;
-
-  if (
-    Math.abs(available.width - imageWidth) <
-    Math.abs(available.height - imageHeight)
-  ) {
-    mul = available.width / imageWidth;
-  } else {
-    mul = available.height / imageHeight;
-  }
-
-  return { width: imageWidth * mul, height: imageHeight * mul };
-};
 
 export const rotateImage = async (path, direction: Directions) => {
   const fileExtension = path.split(".")[1].toLowerCase();

@@ -37,6 +37,7 @@ export const ImageEditor: FC = () => {
   const saveCanvas = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(true);
   const imageId = "main-image";
+  const initialRun = useRef(true);
 
   const placeImage = useCallback(() => {
     setReady(false);
@@ -123,14 +124,20 @@ export const ImageEditor: FC = () => {
   );
 
   useEffect(() => {
-    setReady(false);
-    const imageElement = document.getElementById(imageId);
-    const filtrr2CanvasElement = document.getElementById(`filtrr2-${imageId}`);
+    if (!initialRun.current) {
+      setReady(false);
+      const imageElement = document.getElementById(imageId);
+      const filtrr2CanvasElement = document.getElementById(
+        `filtrr2-${imageId}`
+      );
 
-    imageElement.style.display = "unset";
-    filtrr2CanvasElement?.remove();
+      imageElement.style.display = "unset";
+      filtrr2CanvasElement?.remove();
 
-    executeFiltrr2(imageId, () => setReady(true));
+      executeFiltrr2(imageId, () => setReady(true));
+    } else {
+      initialRun.current = false;
+    }
   }, [
     executeFiltrr2,
     brightenValue,
