@@ -55,7 +55,7 @@ Hier sind die **Tastaturkürzel** erneut aufgeführt:
 
 Das User-Interface wird erst sichtbar, wenn mit der Maus darübergefahren wird.
 
-<img width="132" alt="Bildschirmfoto 2020-06-29 um 18 55 24" src="https://user-images.githubusercontent.com/46886724/86033992-203d9e00-ba3a-11ea-9132-578c9e831b5c.png">
+<img width="132" alt="Bildschirmfoto 2020-06-29 um 19 00 51" src="https://user-images.githubusercontent.com/46886724/86034433-e4570880-ba3a-11ea-8790-bab4ade06d37.png">
 
 <a name="bearbeiten"/>
 
