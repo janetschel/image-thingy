@@ -1,44 +1,18 @@
 import { EXTENSIONS } from "./constants";
 import { Directions } from "./enums";
+import { MutableRefObject } from "react";
 
 const fs = require("fs");
-const { ipcRenderer } = require("electron");
 const nativeImage = require("electron").nativeImage;
 
 export const loadImageNames = (directory: string) =>
-  fs
-    .readdirSync(directory)
-    .filter(element =>
-      EXTENSIONS.includes(element.split(".")[1].toLowerCase())
+  fs.readdirSync(directory).filter(element => {
+    const splitFileName = element.split(".");
+    return (
+      splitFileName.length == 2 &&
+      EXTENSIONS.includes(splitFileName[1].toLowerCase())
     );
-
-//Use this to get the image size if you want to rotate them using CSS
-export const calcImageMultiplicator = async (
-  path: string,
-  available: { width: number; height: number },
-  rotated: boolean
-): Promise<{ width: number; height: number }> => {
-  const dimensions: {
-    width: number;
-    height: number;
-  } = await ipcRenderer.invoke("get-image-dimensions", path);
-
-  const imageWidth = rotated ? dimensions.height : dimensions.width;
-  const imageHeight = rotated ? dimensions.width : dimensions.height;
-
-  let mul;
-
-  if (
-    Math.abs(available.width - imageWidth) <
-    Math.abs(available.height - imageHeight)
-  ) {
-    mul = available.width / imageWidth;
-  } else {
-    mul = available.height / imageHeight;
-  }
-
-  return { width: imageWidth * mul, height: imageHeight * mul };
-};
+  });
 
 export const rotateImage = async (path, direction: Directions) => {
   const fileExtension = path.split(".")[1].toLowerCase();
@@ -56,15 +30,20 @@ export const rotateImage = async (path, direction: Directions) => {
     height: size.width
   });
 
+  let imageData;
   switch (fileExtension) {
     case "png":
-      return fs.writeFileSync(path, resultImage.toPNG());
+      imageData = resultImage.toPNG();
+      break;
     case "jpg":
     case "jpeg":
-      return fs.writeFileSync(path, resultImage.toJPEG(100));
+      imageData = resultImage.toJPEG(100);
+      break;
     default:
-      throw Error("Unknown file extension");
+      throw Error("Unbekannte Dateiendung");
   }
+
+  return fs.writeFileSync(path, imageData);
 };
 
 const rotate90degrees = (bitmap, size, counterClockwise) => {
@@ -85,4 +64,10 @@ const rotate90degrees = (bitmap, size, counterClockwise) => {
   }
 
   return dstBuffer;
+};
+
+export const shakeButton = (button: MutableRefObject<HTMLButtonElement>) => {
+  button.current.style.animation = "none";
+  button.current.focus();
+  button.current.style.animation = "shake 0.5s";
 };

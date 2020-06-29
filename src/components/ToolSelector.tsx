@@ -9,7 +9,7 @@ export const ToolSelector: FC = () => {
 
   return (
     <div>
-      <Headline style={{ marginLeft: 10 }}>Was möchtest du tun?</Headline>
+      <Headline style={{ padding: "30px 0 30px 30px" }}>Was möchtest du tun?</Headline>
       <ToolButton
         text="Bilder sortieren"
         onClick={() => setPage(Pages.SORT_FOLDER_SELECT)}

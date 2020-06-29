@@ -5,7 +5,8 @@ import NavigateNext from "@material-ui/icons/NavigateNext";
 import Redo from "@material-ui/icons/Redo";
 import Undo from "@material-ui/icons/Undo";
 import SaveIcon from "@material-ui/icons/Save";
-import { BLUE } from "../util/constants";
+import { BLUE } from "../../util/constants";
+import { HidingButton } from '../HidingButton';
 
 const StyledDiv = styled.div`
   position: absolute;
@@ -56,35 +57,6 @@ export const SelectorMouseControl: FC<SelectorMouseControlProps> = ({
   handleCopyOrDelete
 }) => {
   const containerDiv = useRef(null);
-
-  const HidingButton: FC<React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  >> = props => {
-    const showControls = () => {
-      containerDiv.current.style.opacity = 1;
-    };
-
-    const hideControls = () => {
-      containerDiv.current.style.opacity = 0;
-    };
-
-    return (
-      <button
-        {...props}
-        onMouseEnter={showControls}
-        onMouseLeave={hideControls}
-        style={{
-          ...props.style,
-          background: "none",
-          cursor: "pointer",
-          border: "none"
-        }}
-      >
-        {props.children}
-      </button>
-    );
-  };
 
   return (
     <StyledDiv ref={containerDiv}>

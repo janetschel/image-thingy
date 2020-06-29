@@ -30,7 +30,7 @@ export const ToolButton: FC<ToolButtonProps> = ({
 }) => {
   return (
     <OuterDiv onClick={handleClick}>
-      <span>{text}</span>
+      <span style={{paddingLeft: 40}}>{text}</span>
       <ArrowForwardIosIcon style={{ width: 40, height: 40 }} />
     </OuterDiv>
   );

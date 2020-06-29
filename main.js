@@ -4,8 +4,6 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const url = require("url");
-const Jimp = require("jimp");
-const { ipcMain } = require("electron");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -70,6 +68,7 @@ function createWindow() {
 
   // Don't show until we are ready and loaded
   mainWindow.once("ready-to-show", () => {
+    mainWindow.maximize();
     mainWindow.show();
 
     // Open the DevTools automatically if developing
@@ -92,15 +91,6 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
-  });
-
-  // Triggers
-  ipcMain.handle("get-image-dimensions", async (event, arg) => {
-    const image = await Jimp.read(arg);
-    return {
-      width: image.bitmap.width,
-      height: image.bitmap.height
-    };
   });
 }
 
