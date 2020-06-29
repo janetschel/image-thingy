@@ -7,6 +7,7 @@ beispielsweise Urlaubsbildern ermöglichen soll.
 .....[Kopieren von Bildern](#kopieren)  
 .....[Bearbeiten von Bildern](#bearbeiten)  
 [Lizenz](#lizenz)  
+[Nachwort](#nachwort) 
 
 
 <a name="vorwort"/>
@@ -81,3 +82,11 @@ Nachdem *diesmal* **ein** Ordner ausgewählt wurde, können die Bilder darin nac
 
 ## Lizenz
 Dieses Projekt ist mit der "GNU General Public License" *lizenziert*. Das Projekt darf von jedem User beliebig heruntergeladen, untersucht, verändert und wieder hochgeladen werden, allerdings **muss** bei erneutem hochladen die gleiche Lizenz verwendet werden.
+
+
+<a name="nachwort"/>
+
+## Nachwort
+Dieses Projekt ist als ein Projekt im Fach Software Engineering im zweiten Semester von [@mawaelzl](https://github.com/mawaelzl), [@simonroedel](https://github.com/simonroedel), [@janetschel](https://github.com/janetschel) und zwei weiteren Entwicklern an der TH Nürnberg entstanden (Studiengang Informatik).
+
+Bei irgendwelchen Verbessrungsvorschlägen gerne ein Issue oder gar ein PR erstellen, wir schauen uns das gerne an.
