@@ -2,10 +2,18 @@
 *image-thingy* ist ein Tool, welches das Selektieren (Aussortieren) und einfaches Bearbeiten von
 beispielsweise Urlaubsbildern ermöglichen soll.
 
-## Benutzung von image-thingy
-Die Benutzung ist vorsätzlich sehr intuitiv gehalten, damit neue Benutzer nicht abgeschreckt werden.
+## Inhaltsverzeichnis
+[Vorwort zur Benutzung von image-thingy](#vorwort)  
+.....[Kopieren von Bildern](#kopieren)  
+.....[Bearbeiten von Bildern](#bearbeiten)
 
-Als Allererstes muss das Tool heruntergeladen und per Doppelklick ausgeführt werden.
+
+<a name="vorwort"/>
+
+## Vorwort zur Benutzung von image-thingy
+Als erstes muss die App heruntergeladen werden und gestartet werden.
+
+<a name="kopieren"/>
 
 ### Kopieren von Bildern
 image-thingy bietet die Möglichkeit Bilder von einem Ursprungs- in einen Zielordner zu kopieren und dabei gegebenenfalls zu rotieren.
@@ -33,3 +41,37 @@ Zum Speichern von Bildern kann entweder das Save-Icon auf dem User-Interface ode
 Beim erneuten Speichern wird das Bild aus dem Zielordner wieder gelöscht (bleibt aber im Ursprungsordner bestehen). Somit können falsch kopierte Bilder auf eine einfache Weise wieder gelöscht werden.
 
 Beim Bilder sortieren (kopieren) ändert sich der Urpsungsordner **nicht**. Der Zielordner beinhaltet am Ende die kopierten (und unter Umständen gedrehten) Bilder.
+
+Hier sind die **Tastaturkürzel** erneut aufgeführt:
+
+| Aktion                     | Kurzbefehl     |
+| :------------------------- |:--------------:|
+| Nach rechts blättern       | D              |
+| Nach links blättern        | A              |
+| Bild nach rechts drehen    | E              |
+| Bild nach links drehen     | Q              |
+| Bild speicherm / "löschen" | Leertaste      |
+
+
+Das User-Interface wird erst sichtbar, wenn mit der Maus darübergefahren wird.
+
+<img width="132" alt="Bildschirmfoto 2020-06-29 um 18 55 24" src="https://user-images.githubusercontent.com/46886724/86033992-203d9e00-ba3a-11ea-9132-578c9e831b5c.png">
+
+<a name="bearbeiten"/>
+
+### Bearbeiten von Bildern
+Um Bilder zu bearbeiten, muss am Anfang "**Bilder bearbeiten**" ausgewählt werden.
+
+Nachdem *diesmal* **ein** Ordner ausgewählt wurde, können die Bilder darin nach den Kriterien
+- Helligkeit,
+- Sättigung,
+- Belichtung,
+- Schärfe,
+- Kontrast,
+- Gamma,
+- Temperatur und nach den Farben
+- rot, grün und blau
+
+über verschiedene Regler bearbeitet werden. Dies funktioniert diesmal allerdings nur über das User-Interface mit der Maus.
+
+![ezgif com-video-to-gif (4)](https://user-images.githubusercontent.com/46886724/86033739-b6bd8f80-ba39-11ea-9636-1354b9b67b87.gif)
