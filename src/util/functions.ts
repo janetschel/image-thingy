@@ -71,3 +71,6 @@ export const shakeButton = (button: MutableRefObject<HTMLButtonElement>) => {
   button.current.focus();
   button.current.style.animation = "shake 0.5s";
 };
+
+export const prefixIfOnMacOS = () =>
+  ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'].indexOf(window.navigator.platform) !== -1 ? "file://" : "";
