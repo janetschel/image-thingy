@@ -5,7 +5,8 @@ beispielsweise Urlaubsbildern ermöglichen soll.
 ## Inhaltsverzeichnis
 [Vorwort zur Benutzung von image-thingy](#vorwort)  
 .....[Kopieren von Bildern](#kopieren)  
-.....[Bearbeiten von Bildern](#bearbeiten)
+.....[Bearbeiten von Bildern](#bearbeiten)  
+[Lizenz](#lizenz)  
 
 
 <a name="vorwort"/>
@@ -50,7 +51,7 @@ Hier sind die **Tastaturkürzel** erneut aufgeführt:
 | Nach links blättern        | A              |
 | Bild nach rechts drehen    | E              |
 | Bild nach links drehen     | Q              |
-| Bild speicherm / "löschen" | Leertaste      |
+| Bild speichern / "löschen" | Leertaste      |
 
 
 Das User-Interface wird erst sichtbar, wenn mit der Maus darübergefahren wird.
@@ -72,6 +73,11 @@ Nachdem *diesmal* **ein** Ordner ausgewählt wurde, können die Bilder darin nac
 - Temperatur und nach den Farben
 - rot, grün und blau
 
-über verschiedene Regler bearbeitet werden. Dies funktioniert diesmal allerdings nur über das User-Interface mit der Maus.
+über verschiedene Regler bearbeitet werden. Dies funktioniert bisher allerdings nur über das User-Interface mit der Maus.
 
 ![ezgif com-video-to-gif (4)](https://user-images.githubusercontent.com/46886724/86033739-b6bd8f80-ba39-11ea-9636-1354b9b67b87.gif)
+
+<a name="lizenz"/>
+
+## Lizenz
+Dieses Projekt ist mit der "GNU General Public License" *lizenziert*. Das Projekt darf von jedem User beliebig heruntergeladen, untersucht, verändert und wieder hochgeladen werden, allerdings **muss** bei erneutem hochladen die gleiche Lizenz verwendet werden.
