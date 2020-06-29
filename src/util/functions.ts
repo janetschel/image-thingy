@@ -72,7 +72,7 @@ export const shakeButton = (button: MutableRefObject<HTMLButtonElement>) => {
   button.current.style.animation = "shake 0.5s";
 };
 
-export const prefixIfOnMacOS = () => {
+export const prefixIfOnUnixSystems = () => {
   const platform = window.navigator.platform;
 
   return /Mac/.test(platform) || /Linux/.test(platform) ? "file://" : "";

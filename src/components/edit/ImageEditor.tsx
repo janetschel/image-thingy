@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { AppContext } from "../AppContextProvider";
 import { HEADER_HEIGHT } from "../../util/constants";
-import {loadImageNames, prefixIfOnMacOS} from "../../util/functions";
+import {loadImageNames, prefixIfOnUnixSystems} from "../../util/functions";
 import { EditorMouseControl } from "./EditorMouseControl";
 import { Filtrr2 } from "../../filtrr2/filtrr2";
 import { EditorContext } from "./EditorContext";
@@ -42,7 +42,7 @@ export const ImageEditor: FC = () => {
   const placeImage = useCallback(() => {
     setReady(false);
 
-    const timestampedPath = `${prefixIfOnMacOS()}${imagePath.current}?${new Date().getTime()}`;
+    const timestampedPath = `${prefixIfOnUnixSystems()}${imagePath.current}?${new Date().getTime()}`;
 
     const image = new Image();
     image.src = timestampedPath;
@@ -172,7 +172,7 @@ export const ImageEditor: FC = () => {
         throw new Error("Unbekannte Dateiendung");
     }
 
-    image.src = `${prefixIfOnMacOS()}${imagePath.current}?${new Date().getTime()}`;
+    image.src = `${prefixIfOnUnixSystems()}${imagePath.current}?${new Date().getTime()}`;
     image.onload = () => {
       saveCanvas.current.width = image.width;
       saveCanvas.current.height = image.height;
