@@ -13,7 +13,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { BLUE } from "../../util/constants";
 import { HidingButton } from "../HidingButton";
 import WbSunnyIcon from "@material-ui/icons/WbSunny";
-import { Slider } from "@material-ui/core";
+import { Slider, TooltipProps } from "@material-ui/core";
 import { EditorContext } from "./EditorContext";
 import Tooltip from "@material-ui/core/Tooltip";
 import { FaThermometerHalf } from "react-icons/fa";
@@ -24,6 +24,7 @@ import {
   MdInvertColors
 } from "react-icons/md";
 import { IoMdContrast } from "react-icons/io";
+import { RiDropLine } from "react-icons/ri";
 
 const StyledDiv = styled.div`
   position: absolute;
@@ -59,6 +60,9 @@ const SliderContainer = styled.div`
   width: 100%;
   grid-template-columns: min-content 1fr;
   grid-gap: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
 `;
 
 const StyledSlider = styled(Slider)`
@@ -69,8 +73,15 @@ const StyledSlider = styled(Slider)`
 const editIconStyle = {
   cursor: "pointer",
   color: BLUE,
-  fontSize: "2em",
-  margin: "auto"
+  fontSize: "2em"
+};
+
+const IconTooltip: FC<TooltipProps> = ( props) => {
+  return (
+    <Tooltip {...props}>
+      <div style={{ margin: "auto" }}>{props.children}</div>
+    </Tooltip>
+  );
 };
 
 const iconStyle = {
@@ -114,7 +125,13 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
     gammaValue,
     setGammaValue,
     temperatureValue,
-    setTemperatureValue
+    setTemperatureValue,
+    redAdjustValue,
+    setRedAdjustValue,
+    greenAdjustValue,
+    setGreenAdjustValue,
+    blueAdjustValue,
+    setBlueAdjustValue
   } = useContext(EditorContext);
 
   const containerDiv = useRef<HTMLDivElement>(null);
@@ -126,6 +143,9 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
   const [contrastState, setContrastState] = useState<number>(0);
   const [gammaState, setGammaState] = useState<number>(0);
   const [temperatureState, setTemperatureState] = useState<number>(0);
+  const [redAdjustState, setRedAdjustState] = useState<number>(0);
+  const [greenAdjustState, setGreenAdjustState] = useState<number>(0);
+  const [blueAdjustState, setBlueAdjustState] = useState<number>(0);
 
   useEffect(() => {
     setBrightenState(brightenValue);
@@ -148,6 +168,15 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
   useEffect(() => {
     setTemperatureState(temperatureValue);
   }, [temperatureValue]);
+  useEffect(() => {
+    setRedAdjustState(redAdjustValue);
+  }, [redAdjustValue]);
+  useEffect(() => {
+    setGreenAdjustState(greenAdjustValue);
+  }, [greenAdjustValue]);
+  useEffect(() => {
+    setBlueAdjustState(blueAdjustValue);
+  }, [blueAdjustValue]);
 
   const handleBrightenChange = (
     event: ChangeEvent,
@@ -221,6 +250,42 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
   ) => {
     !disabled && setTemperatureValue(value as number);
   };
+  const handleRedAdjustChange = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setRedAdjustState(value as number);
+  };
+  const handleRedAdjustCommit = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setRedAdjustValue(value as number);
+  };
+  const handleGreenAdjustChange = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setGreenAdjustState(value as number);
+  };
+  const handleGreenAdjustCommit = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setGreenAdjustValue(value as number);
+  };
+  const handleBlueAdjustChange = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setBlueAdjustState(value as number);
+  };
+  const handleBlueAdjustCommit = (
+    event: ChangeEvent,
+    value: number | number[]
+  ) => {
+    !disabled && setBlueAdjustValue(value as number);
+  };
 
   const showControls = () => {
     containerDiv.current.style.opacity = "1";
@@ -237,14 +302,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
           onMouseEnter={showControls}
           onMouseLeave={hideControls}
         >
-          <Tooltip title="Helligkeit">
+          <IconTooltip title="Helligkeit">
             <MdBrightnessMedium
               style={editIconStyle}
               onClick={() => {
                 setBrightenValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -252,14 +317,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleBrightenChange}
             onChangeCommitted={handleBrightenCommit}
           />
-          <Tooltip title="Sättigung">
+          <IconTooltip title="Sättigung">
             <MdInvertColors
               style={editIconStyle}
               onClick={() => {
                 setSaturateValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -267,14 +332,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleSaturateChange}
             onChangeCommitted={handleSaturateCommit}
           />
-          <Tooltip title="Belichtung">
+          <IconTooltip title="Belichtung">
             <WbSunnyIcon
               style={editIconStyle}
               onClick={() => {
                 setExposeValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -282,14 +347,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleExposeChange}
             onChangeCommitted={handleExposeCommit}
           />
-          <Tooltip title="Schärfe">
+          <IconTooltip title="Schärfe">
             <MdHighQuality
               style={editIconStyle}
               onClick={() => {
                 setSharpenValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={0}
             max={100}
@@ -297,14 +362,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleSharpenChange}
             onChangeCommitted={handleSharpenCommit}
           />
-          <Tooltip title="Kontrast">
+          <IconTooltip title="Kontrast">
             <IoMdContrast
               style={editIconStyle}
               onClick={() => {
                 setContrastValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -312,14 +377,14 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleContrastChange}
             onChangeCommitted={handleContrastCommit}
           />
-          <Tooltip title="Gamma">
+          <IconTooltip title="Gamma">
             <MdExposure
               style={editIconStyle}
               onClick={() => {
                 setGammaValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
@@ -327,20 +392,65 @@ export const EditorMouseControl: FC<EditorMouseControlProps> = ({
             onChange={handleGammaChange}
             onChangeCommitted={handleGammaCommit}
           />
-          <Tooltip title="Temperatur">
+          <IconTooltip title="Temperatur">
             <FaThermometerHalf
               style={editIconStyle}
               onClick={() => {
                 setTemperatureValue(0);
               }}
             />
-          </Tooltip>
+          </IconTooltip>
           <StyledSlider
             min={-100}
             max={100}
             value={temperatureState}
             onChange={handleTemperatureChange}
             onChangeCommitted={handleTemperatureCommit}
+          />
+          <IconTooltip title="Rot">
+            <RiDropLine
+              style={{...editIconStyle, color: "red"}}
+              onClick={() => {
+                setRedAdjustValue(0);
+              }}
+            />
+          </IconTooltip>
+          <StyledSlider
+            min={-100}
+            max={100}
+            value={redAdjustState}
+            onChange={handleRedAdjustChange}
+            onChangeCommitted={handleRedAdjustCommit}
+          />
+          <IconTooltip title="Grün">
+            <RiDropLine
+              style={{...editIconStyle, color: "green"}}
+              onClick={() => {
+                setGreenAdjustValue(0);
+              }}
+            />
+          </IconTooltip>
+          <StyledSlider
+            min={-100}
+            max={100}
+            value={greenAdjustState}
+            onChange={handleGreenAdjustChange}
+            onChangeCommitted={handleGreenAdjustCommit}
+          />
+          <IconTooltip title="Blau">
+            <RiDropLine
+              style={{...editIconStyle, color: "blue"}}
+              onClick={() => {
+                setBlueAdjustValue(0);
+              }}
+            />
+          </IconTooltip>
+          <StyledSlider
+            min={-100}
+            max={100}
+            value={blueAdjustState}
+            onChange={handleBlueAdjustChange}
+            onChangeCommitted={handleBlueAdjustCommit}
           />
         </SliderContainer>
       </SliderContainerContainer>

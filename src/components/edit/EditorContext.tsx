@@ -16,6 +16,12 @@ interface Context {
   setGammaValue: (gammaValue: number) => void;
   temperatureValue: number;
   setTemperatureValue: (temperatureValue: number) => void;
+  redAdjustValue: number;
+  setRedAdjustValue: (redAdjustValue: number) => void;
+  greenAdjustValue: number;
+  setGreenAdjustValue: (greenAdjustValue: number) => void;
+  blueAdjustValue: number;
+  setBlueAdjustValue: (blueAdjustValue: number) => void;
   reset: () => void;
 }
 
@@ -34,6 +40,12 @@ export const EditorContext = createContext<Context>({
   setGammaValue: () => {},
   temperatureValue: 0,
   setTemperatureValue: () => {},
+  redAdjustValue: 0,
+  setRedAdjustValue: () => {},
+  greenAdjustValue: 0,
+  setGreenAdjustValue: () => {},
+  blueAdjustValue: 0,
+  setBlueAdjustValue: () => {},
   reset: () => {}
 });
 
@@ -45,6 +57,9 @@ export const EditorContextProvider: FC = ({ children }) => {
   const [contrastValue, setContrastValue] = useState<number>(0);
   const [gammaValue, setGammaValue] = useState<number>(0);
   const [temperatureValue, setTemperatureValue] = useState<number>(0);
+  const [redAdjustValue, setRedAdjustValue] = useState<number>(0);
+  const [greenAdjustValue, setGreenAdjustValue] = useState<number>(0);
+  const [blueAdjustValue, setBlueAdjustValue] = useState<number>(0);
 
   const reset = () => {
     setBrightenValue(0);
@@ -54,6 +69,9 @@ export const EditorContextProvider: FC = ({ children }) => {
     setContrastValue(0);
     setGammaValue(0);
     setTemperatureValue(0);
+    setRedAdjustValue(0);
+    setGreenAdjustValue(0);
+    setBlueAdjustValue(0);
   };
 
   return (
@@ -73,6 +91,12 @@ export const EditorContextProvider: FC = ({ children }) => {
         setGammaValue,
         temperatureValue,
         setTemperatureValue,
+        redAdjustValue,
+        setRedAdjustValue,
+        greenAdjustValue,
+        setGreenAdjustValue,
+        blueAdjustValue,
+        setBlueAdjustValue,
         reset
       }}
     >

@@ -27,6 +27,9 @@ export const ImageEditor: FC = () => {
     contrastValue,
     gammaValue,
     temperatureValue,
+    redAdjustValue,
+    greenAdjustValue,
+    blueAdjustValue,
     reset
   } = useContext(EditorContext);
   const [counter, setCounter] = useState<number>(0);
@@ -101,6 +104,15 @@ export const ImageEditor: FC = () => {
           if (temperatureValue) {
             this.temperature(temperatureValue / 5.0);
           }
+          if (redAdjustValue) {
+            this.adjust(redAdjustValue / 200.0, 0, 0);
+          }
+          if (greenAdjustValue) {
+            this.adjust(0, greenAdjustValue / 200.0, 0);
+          }
+          if (blueAdjustValue) {
+            this.adjust(0, 0, blueAdjustValue / 200.0);
+          }
           this.render(() => {
             if (done) {
               done();
@@ -119,7 +131,10 @@ export const ImageEditor: FC = () => {
       sharpenValue,
       contrastValue,
       gammaValue,
-      temperatureValue
+      temperatureValue,
+      redAdjustValue,
+      greenAdjustValue,
+      blueAdjustValue
     ]
   );
 
@@ -146,7 +161,10 @@ export const ImageEditor: FC = () => {
     sharpenValue,
     contrastValue,
     gammaValue,
-    temperatureValue
+    temperatureValue,
+    redAdjustValue,
+    greenAdjustValue,
+    blueAdjustValue
   ]);
 
   const handlePrevious = () => setCounter(prev => (prev > 0 ? prev - 1 : prev));
