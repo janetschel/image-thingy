@@ -3,7 +3,7 @@ import { AppContext } from "../AppContextProvider";
 import styled from "styled-components";
 import { Beenhere } from "@material-ui/icons";
 import { BLUE, HEADER_HEIGHT } from "../../util/constants";
-import {loadImageNames, prefixIfOnUnixSystems, rotateImage} from "../../util/functions";
+import {loadImageNames, rotateImage} from "../../util/functions";
 import { Directions } from "../../util/enums";
 import { SelectorMouseControl } from "./SelectorMouseControl";
 
@@ -39,7 +39,7 @@ export const ImageSelector: FC = () => {
     toPath.current = `${toDir}/${fromDirContent.current[counter]}`;
 
     setExists(toDirContent.includes(fromDirContent.current[counter]));
-    getColorFromURL(`${prefixIfOnUnixSystems()}${fromPath.current}`).then(color => {
+    getColorFromURL(`file://${fromPath.current}`).then(color => {
       containerDiv.current.style.backgroundColor = `rgb(${color[0]},${color[1]},${color[2]}`;
     });
     setImageToDisplay({ src: fromPath.current, timestamp: Date.now() });
@@ -115,7 +115,7 @@ export const ImageSelector: FC = () => {
     >
       {exists && <CheckIcon />}
       <img
-        src={`${prefixIfOnUnixSystems()}${imageToDisplay.src}?${imageToDisplay.timestamp}`}
+        src={`file://${imageToDisplay.src}?${imageToDisplay.timestamp}`}
         alt="Das Bild kann nicht angezeigt werden"
         style={{
           width: "100%",
